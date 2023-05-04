@@ -1,0 +1,53 @@
+//literals
+                else if (instr.get(i).startsWith("=")) {
+                	
+                		String type = refr.get(i);//convert the reference to string
+                        char character = type.charAt(0);//take the first character in the string type and save it in the varaible x
+                        if (character == 'C'){//if the first character is c
+                            String number = type.substring(2,type.length()-1);//take the characters in the string type from the third character to the end - 1
+                            int refNumber = number.length();// calculate the length of the string number
+                            int locctrNumber = Integer.parseInt(locctr.get(i),16);//convert the location counter to hexadecimal
+                            int locationCounter1 = refNumber + locctrNumber;//add the new ref to the location counter
+                            temp1 = Integer.toHexString(locationCounter1);
+                            String num = "";
+                            //to check if the length of the string is less than 4 then go into the for loop
+                            if(temp1.length() < 4){
+                                //if it's less than 4 digits then fill it with "0"
+                                for(int y=4; y>temp1.length(); y--){
+                                    num += "0";
+                                }
+                            }
+                            //increment the temp +1 until it completes the 4 digits
+                            num += temp1;
+                            //save it in the arr list locctr
+                            locctr.add(num);
+                        }
+                        else {//if the charcter isnot c
+                            String number = type.substring(2,type.length()-1);// take the characters in the string type from the third character to the end -1
+                            int refToNum;
+                            if (number.length()%2 ==0)// to check if the number is odd or even
+                            {
+                                int newnumber = number.length()/2;//if the number is even than it is divided by 2
+                                refToNum = newnumber;// and added to the reference
+                            }
+                            else{
+                                int newnumber = (number.length()+1)/2;// if the number is odd than add 1 and divide it by 2
+                                refToNum = newnumber;//than add it to the reference
+                            }
+                            int ctrToHexNum = Integer.parseInt (locctr.get(i),16);//convert the location to hexadecimal
+                            int locationCounter2 = refToNum + ctrToHexNum;//add the reference to the location
+                            temp1 = Integer.toHexString(locationCounter2);
+                            String num = "";
+                            //to check if the length of the string is less than 4 then go into the for loop
+                            if(temp1.length() < 4){
+                                //if it's less than 4 digits then fill it with "0"
+                                for(int y=4; y>temp1.length(); y--){
+                                    num += "0";
+                                }
+                            }
+                            //increment the temp +1 until it completes the 4 digits
+                            num += temp1;
+                            //save it in the arr list locctr
+                            locctr.add(num);
+                        }
+                	}

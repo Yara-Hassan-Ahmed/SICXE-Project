@@ -1,0 +1,144 @@
+//location counter format 5
+/*  else if(instr.get(i).startsWith("&")) {
+                //Returns the element at the specified position in this list and Compares it to the specified object
+                int x = Integer.parseInt(locctr.get(i), 16);//convert from integer to hex
+                locationCounter = x + 5;//format 4 (add 5 on the prev locctr)
+                //to check if the locctr is 4 digits, first we convert the int number to str to count the digits
+                temp1 = Integer.toHexString(locationCounter);
+                String number = "";
+                //to check if the length of the string is less than 4 then go into the for loop
+                if (temp1.length() < 4) {
+                    for (int z = 4; z > temp1.length(); z--) {
+                        number += "0";
+                    }
+                }
+                //increment the temp +1 until it completes the 4 digits
+                number += temp1;
+                //save it in the arr list locctr
+                locctr.add(number);
+            }*/
+
+
+//object code format 5
+/* if (instr.get(i).startsWith("&")) {
+                
+				         //Initializing the flag bits with the format 3 values     
+				                    N = "1";
+				                    I = "1";
+				                    X = "0";
+				                    B = "0";
+				                    P = "0";
+				                    E = "0";
+				                  //Initializing some values
+				                    String address = null;
+				                    String disp = "";
+				                    String ref;
+				                    //if it begin with a certain symbol it will change specific flag values
+				                    if (refr.get(i).startsWith("#")) {
+				                        N = "0";
+				                    } else if (refr.get(i).startsWith("@")) {
+				                        I = "0";
+				                    } else if (refr.get(i).contains(",b")){
+				                        B ="1";
+				                    }
+				                    //to get the value of opcode from OPTAB
+				                    for (int j = 0; j < OPTAB.length; j++) {
+				                        if (instr.get(i).equals(OPTAB[j][0])) {
+				                            opcode = OPTAB[j][2];
+				                        }
+				                    }
+		                            //if the reference got any of these symbols then it will add the value in the reference
+				                    if (refr.get(i).contains("#") || refr.get(i).contains("@")) {
+				                        String[] values = refr.get(i).split("#|@");
+				                        ref = values[1];
+				                    }
+		                            //if the reference got "," then it will add the value in the reference
+				                    else if (refr.get(i).contains(",b")) {
+				                        String[] values = refr.get(i).split(",b");
+				                        ref = values[0];
+				                    }
+				                  //if not then it will get it from the refr arraylist
+				                    else
+				                        ref = refr.get(i);
+				                    //to get the displacement value
+				                  //Initializing some values
+				                    int Disp =0;
+				                    int TA=0;
+				                    int PC=0;
+				                    if(ref.matches("[a-zA-Z]+")){
+				                        for (int j = 0; j < refr.size(); j++) {
+				                            if (ref.equals(label.get(j))) {
+				                                address = locctr.get(j);
+				                                TA = Integer.parseInt(address,16);//converting the address to hexa
+				                                PC = Integer.parseInt(locctr.get(i+1), 16);//converting the previous location counter to hexa
+				                                Disp = TA-PC;//getting the displacement if it's PC
+				                                break;
+				                            }
+				                        }
+				                        //checking the conditions of the value we got from the displacement
+				                        //if the value is correct then it will change the flag bit P
+				                        if(Disp >= -2048 && Disp <= 2047){
+				                            P = "1";
+				                        }
+				                        //if it's not correct then it will change the flag bit B
+				                        else {
+				                            String pos = "";
+				                            String base = "";
+				                            B = "1";
+				                            //to get the position that has the instruction BASE
+				                            for (int j = 0; j < instr.size(); j++) {
+				                                if (instr.get(j).equals("BASE")) {
+				                                    pos = refr.get(j);
+				                                }
+				                            }
+				                            //if the label = the pos then we will get the location counter of the base
+				                            for (int j = 0; j < label.size(); j++) {
+				                                if (label.get(j).equals(pos)) {
+				                                    base = locctr.get(j);
+				                                }
+				                            }
+				                            int BASE = Integer.parseInt(base, 16);//converting the base to hexa
+				                            Disp = TA-BASE;//calculating the displacement if it's base
+				                        }
+				                        String displacement = Integer.toHexString(Disp);//converting the disp to string
+				                        //if the displacement length is less than 3 then we will add "0"
+				                        if(displacement.length()>3){
+				                            displacement = displacement.substring(displacement.length()-3, displacement.length());
+				                        }
+				                        //increment the disp by 1 until it completes the 3 digits by adding "0"
+				                        for(int w = 3; w>displacement.length(); w--){
+				                            disp += "0";
+				                        }
+				                        disp += displacement;
+				                    }
+				
+				                    else {	
+				                        int numb = Integer.parseInt(ref);//converting ref to hexa
+				                        String wor = Integer.toHexString(numb);//converting numb to string
+				                        //checking if it's 3 digits, if not we will add "0" until it's 3 digits
+				                        for(int w = 3; w>wor.length(); w--){
+				                            //increment the disp by 1 until it completes the 3 digits by adding "0"
+				                            disp += "0";
+				                        }
+				                        disp += wor;
+				                    }
+				                    
+				                    String op = "" + opcode.charAt(0);//getting the 1st opcode
+				                    String opcodeBinary = hexToBin(op);//converting from hexa to binary using the function hexToBin
+				                    op = "" +opcode.charAt(1);//getting the 2nd opcode
+				                    opcodeBinary += hexToBin(op);
+				                    opcodeBinary = opcodeBinary.substring(0, opcodeBinary.length() - 2);
+		                            //getting the opcode and the flag converting it from binary to hexa
+				                    int opCodeAndFlagBinary = Integer.parseInt(opcodeBinary + N + I + X + B + P + E, 2);
+				                    String opCodeAndFlagHexa = Integer.toString(opCodeAndFlagBinary, 16);
+				                    String opCodeAndFlag = "";
+	                                //checks the address contains 3 digits or not
+				                    for(int w = 3; w>opCodeAndFlagHexa.length(); w--){
+				                        opCodeAndFlag += "0";
+				                    }
+				                    opCodeAndFlag += opCodeAndFlagHexa;
+				                    //save it in the arr list objCode
+				                    objCode.add(opCodeAndFlag + disp);
+				              }
+				           */
+				        
